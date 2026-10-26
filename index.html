@@ -4,151 +4,375 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>Our Days ✨</title>
+<meta name="theme-color" content="#0d0f14">
+<title>Our Days</title>
+<link rel="preload" href="assets/wenkai.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  @font-face {
+    font-family: 'WenKai';
+    src: url('assets/wenkai.woff2') format('woff2');
+    font-weight: 300;
+    font-display: swap;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #0d0f14;
+    --ink2: #151922;
+    --cream: #ece5d8;
+    --muted: #8b8578;
+    --rose: #c98b8b;
+    --gold: #d9b479;
+  }
+
+  html { scroll-behavior: smooth; }
+
   body {
-    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: #fff; min-height: 100vh; text-align: center;
+    background: radial-gradient(120% 80% at 50% 0%, #1a1f2b 0%, var(--ink) 55%, #07080b 100%);
+    color: var(--cream);
+    font-family: 'WenKai', 'Kaiti SC', 'KaiTi', 'STKaiti', serif;
+    font-weight: 300;
+    min-height: 100vh;
     overflow-x: hidden;
-  }
-  h1 { padding-top: 48px; font-weight: 300; letter-spacing: 6px; font-size: 28px; }
-  .sub { color: #8892b0; margin-top: 8px; font-size: 14px; }
-
-  .counter {
-    margin: 40px auto 0; font-size: 64px; font-weight: 200;
-    color: #ffd6e0; text-shadow: 0 0 30px rgba(255, 107, 157, .5);
-  }
-  .counter small { font-size: 20px; color: #8892b0; }
-  .since { color: #8892b0; font-size: 13px; margin-top: 4px; }
-
-  .photos {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px; max-width: 720px; margin: 48px auto; padding: 0 20px;
-  }
-  .photos div {
-    aspect-ratio: 3/4; border-radius: 14px; background: #233a5e;
-    display: flex; align-items: center; justify-content: center;
-    color: #5a6c93; font-size: 14px; cursor: pointer;
-    transition: transform .25s, box-shadow .25s;
-    user-select: none;
-  }
-  .photos div:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 12px 30px rgba(0,0,0,.4); }
-  .photos div:active { transform: scale(.95); }
-
-  .hint { color: #5a6c93; font-size: 13px; margin-bottom: 60px; }
-  .heart {
-    position: fixed; pointer-events: none; font-size: 24px;
-    animation: floatUp 1.6s ease-out forwards;
-  }
-  @keyframes floatUp {
-    0% { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-180px) scale(1.6); }
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* 口令锁遮罩 */
+  .hidden { display: none !important; }
+
+  /* ========== 口令门 ========== */
   #gate {
     position: fixed; inset: 0; z-index: 99;
-    background: linear-gradient(160deg, #1a1a2e, #0f3460);
+    background: radial-gradient(120% 80% at 50% 10%, #1a1f2b, #07080b);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 18px;
+    gap: 22px; padding: 24px; text-align: center;
   }
-  #gate.hidden { display: none; }
-  #gate p { color: #8892b0; font-size: 15px; letter-spacing: 2px; }
+  #gate .q { color: var(--muted); font-size: 17px; letter-spacing: 1px; }
   #gate input {
-    background: transparent; border: none; border-bottom: 1px solid #5a6c93;
-    color: #ffd6e0; font-size: 22px; text-align: center; letter-spacing: 6px;
-    width: 200px; outline: none; padding: 6px;
+    background: transparent; border: none; border-bottom: 1px solid #3a3f4d;
+    color: var(--cream); font-family: inherit; font-size: 24px; text-align: center;
+    letter-spacing: 8px; width: 190px; outline: none; padding: 8px 0;
   }
+  #gate input:focus { border-bottom-color: var(--rose); }
   #gate button {
-    background: transparent; color: #ffd6e0; border: 1px solid #ff6b9d;
-    border-radius: 20px; padding: 8px 34px; font-size: 15px; cursor: pointer;
-    transition: background .2s;
+    background: transparent; color: var(--rose); border: 1px solid rgba(201,139,139,.45);
+    border-radius: 999px; padding: 9px 34px; font-family: inherit; font-size: 16px;
+    letter-spacing: 3px; cursor: pointer; transition: all .3s;
   }
-  #gate button:hover { background: rgba(255,107,157,.15); }
-  #gate .err { color: #ff6b6b; font-size: 13px; height: 16px; }
+  #gate button:hover { background: rgba(201,139,139,.1); }
+  #gate .err { color: #b66060; font-size: 14px; min-height: 18px; }
+
+  /* ========== 开场 ========== */
+  .hero {
+    min-height: 100svh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; position: relative;
+    padding: 40px 20px; text-align: center;
+  }
+  .kicker {
+    color: var(--muted); font-size: 15px; letter-spacing: 4px;
+    opacity: 0; animation: fadeUp 1.2s .2s forwards;
+  }
+  .counter {
+    font-size: clamp(72px, 22vw, 150px); line-height: 1; margin: 18px 0 6px;
+    color: var(--cream); letter-spacing: 2px;
+    text-shadow: 0 0 70px rgba(201,139,139,.22);
+    font-variant-numeric: tabular-nums;
+  }
+  .counter em {
+    font-style: normal; font-size: .22em; color: var(--rose);
+    letter-spacing: 6px; margin-left: .18em; vertical-align: super;
+    opacity: 0; animation: fadeUp 1s 1.8s forwards;
+  }
+  .hero-names {
+    color: var(--muted); font-size: 16px; letter-spacing: 5px;
+    margin-top: 14px; opacity: 0; animation: fadeUp 1.2s 2s forwards;
+  }
+  .cue {
+    position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%);
+    color: var(--muted); font-size: 13px; letter-spacing: 3px;
+    opacity: 0; animation: fadeIn 1.5s 2.6s forwards;
+  }
+  .cue::after {
+    content: ''; display: block; width: 1px; height: 42px; margin: 10px auto 0;
+    background: linear-gradient(var(--muted), transparent);
+    animation: breathe 2.4s ease-in-out infinite;
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeIn { to { opacity: 1; } }
+  @keyframes breathe { 0%,100% { opacity: .25; } 50% { opacity: .9; } }
+
+  /* ========== 照片 ========== */
+  .gallery { padding: 10px 0 70px; }
+  .stage {
+    position: relative; width: 100%; height: 78svh; max-height: 760px;
+    overflow: hidden; background: #0a0c11;
+  }
+  .slide {
+    position: absolute; inset: 0; opacity: 0;
+    transition: opacity 1.6s ease;
+  }
+  .slide.on { opacity: 1; }
+  .slide img {
+    width: 100%; height: 100%; object-fit: cover;
+    transform: scale(1.04); will-change: transform;
+  }
+  .slide.on img { animation: kenburns 9s ease-out forwards; }
+  @keyframes kenburns { from { transform: scale(1.04); } to { transform: scale(1.16) translateY(-1.2%); } }
+  .stage::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to top, rgba(7,8,11,.92) 0%, rgba(7,8,11,.25) 32%, transparent 60%);
+  }
+  .caption {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+    padding: 0 26px 40px; max-width: 720px; margin: 0 auto;
+  }
+  .caption .date { color: var(--rose); font-size: 13px; letter-spacing: 3px; display: block; margin-bottom: 8px; }
+  .caption .line { font-size: 20px; line-height: 1.7; color: var(--cream); }
+  .dots { display: flex; gap: 9px; justify-content: center; margin-top: 26px; }
+  .dots i {
+    width: 5px; height: 5px; border-radius: 50%; background: #3a3f4d;
+    transition: all .4s;
+  }
+  .dots i.on { background: var(--rose); width: 20px; border-radius: 3px; }
+
+  /* ========== 每日一句 ========== */
+  .daily { padding: 30px 26px 90px; text-align: center; max-width: 640px; margin: 0 auto; }
+  .daily .label { color: var(--muted); font-size: 13px; letter-spacing: 4px; margin-bottom: 26px; }
+  .daily .mark {
+    font-size: 54px; color: rgba(201,139,139,.3); line-height: .6;
+    display: block; margin-bottom: 6px; font-family: Georgia, serif;
+  }
+  .daily p {
+    font-size: 27px; line-height: 1.75; letter-spacing: 2px; color: var(--cream);
+  }
+  .daily .note { color: var(--muted); font-size: 14px; margin-top: 18px; letter-spacing: 2px; }
+
+  /* ========== 信 ========== */
+  .letters { padding: 0 22px 90px; max-width: 680px; margin: 0 auto; }
+  .letters h2 {
+    font-weight: 300; font-size: 18px; letter-spacing: 6px; color: var(--muted);
+    text-align: center; margin-bottom: 40px;
+  }
+  .letter {
+    border: 1px solid rgba(201,139,139,.16);
+    background: linear-gradient(160deg, rgba(30,34,45,.85), rgba(16,19,26,.9));
+    border-radius: 18px; padding: 30px 24px; margin-bottom: 22px;
+    position: relative; overflow: hidden;
+  }
+  .letter .seal {
+    width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 18px;
+    border: 1px solid rgba(201,139,139,.5); color: var(--rose);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; letter-spacing: 1px;
+    box-shadow: 0 0 26px rgba(201,139,139,.14) inset;
+  }
+  .letter .title { text-align: center; font-size: 20px; letter-spacing: 3px; margin-bottom: 8px; }
+  .letter .cd { text-align: center; color: var(--muted); font-size: 14px; letter-spacing: 2px; }
+  .letter .cd b { color: var(--rose); font-weight: 300; font-size: 21px; }
+  .letter .body { display: none; }
+  .letter.open .body { display: block; animation: fadeUp 1.4s forwards; }
+  .letter.open .locked { display: none; }
+  .letter .body p { font-size: 17px; line-height: 2.05; margin-bottom: 16px; color: #ded7c9; }
+  .letter .body p:last-child { margin-bottom: 0; }
+  .letter .sign { text-align: right; color: var(--muted); font-size: 15px; margin-top: 22px; }
+
+  footer {
+    text-align: center; color: #4a4f5c; font-size: 13px; letter-spacing: 4px;
+    padding: 0 20px 56px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .slide.on img { transform: none; }
+  }
 </style>
 </head>
 <body>
-  <div id="gate">
-    <p>🔒 只有知道暗号的人才能进来</p>
-    <input id="code" type="password" maxlength="12" placeholder="暗号" autofocus>
-    <button onclick="unlock()">进入</button>
-    <div class="err" id="err"></div>
-  </div>
 
-  <h1>OUR DAYS</h1>
-  <div class="sub">—— 记录小韩&小王的每一天 ——</div>
+<div id="gate">
+  <div class="q">我们在一起的那天，是几月几号？</div>
+  <input id="code" type="text" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="—">
+  <button onclick="unlock()">开门</button>
+  <div class="err" id="err"></div>
+</div>
 
-  <div class="counter" id="days">…<small> 天</small></div>
-  <div class="since" id="since"></div>
+<main id="page" class="hidden">
 
-  <div class="photos">
-    <div><img src="images/p_a7f32.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:14px"></div>
-    <div><img src="images/p_b9k41.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:14px"></div>
-    <div><img src="images/p_c5m88.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:14px"></div>
-  </div>
+  <section class="hero">
+    <div class="kicker">自 2026 年 4 月 13 日起</div>
+    <div class="counter"><span id="days">0</span><em>天</em></div>
+    <div class="hero-names">小韩 &amp; 小王</div>
+    <div class="cue">往下看</div>
+  </section>
 
-  <div class="hint">点一下任意照片块试试 ✨</div>
+  <section class="gallery">
+    <div class="stage" id="stage"></div>
+    <div class="dots" id="dots"></div>
+  </section>
 
+  <section class="daily">
+    <div class="label">今 日 一 句</div>
+    <span class="mark">&ldquo;</span>
+    <p id="quoteText">…</p>
+    <div class="note" id="quoteNote"></div>
+  </section>
+
+  <section class="letters">
+    <h2>留 给 以 后 的 话</h2>
+    <div class="letter" data-date="2027-04-13" data-key="a"></div>
+    <div class="letter" data-date="2027-08-15" data-key="b"></div>
+  </section>
+
+  <footer>未 完 待 续</footer>
+</main>
+
+<script src="letters.js"></script>
 <script>
-  // ===== 口令锁：把暗号改成只有你们俩知道的 =====
-  const PASSCODE = '0413';
-  // 猜错超过 5 次，1 小时内不再允许尝试（存在浏览器里）
-  let tries = +(sessionStorage.tries || 0);
-  const lockedUntil = +(sessionStorage.lockedUntil || 0);
+/* ================= 口令 ================= */
+const PASSCODES = ['0413', '4.13', '4月13', '413', '0413日'];
+let tries = +(sessionStorage.tries || 0);
+const lockedUntil = +(sessionStorage.lockedUntil || 0);
 
-  function unlock() {
-    const gate = document.getElementById('gate');
-    const err = document.getElementById('err');
-    if (Date.now() < lockedUntil) {
-      err.textContent = '试错太多啦，休息一小时再来~';
-      return;
+function unlock() {
+  const err = document.getElementById('err');
+  if (Date.now() < lockedUntil) { err.textContent = '试太多次了，歇一会儿再来'; return; }
+  const v = document.getElementById('code').value.trim().replace(/\s/g, '');
+  if (PASSCODES.includes(v)) {
+    sessionStorage.ok = '1';
+    document.getElementById('gate').classList.add('hidden');
+    start();
+  } else {
+    tries++; sessionStorage.tries = tries;
+    err.textContent = '不对哦（' + tries + '/5）';
+    if (tries >= 5) {
+      sessionStorage.lockedUntil = Date.now() + 3600000;
+      err.textContent = '先歇一小时吧';
     }
-    if (document.getElementById('code').value === PASSCODE) {
-      sessionStorage.ok = '1';
-      gate.classList.add('hidden');
+  }
+}
+document.getElementById('code').addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
+
+/* ================= 数据 ================= */
+const START = new Date(2026, 3, 13);          // 2026-04-13
+const PHOTOS = [
+  { src: 'images/p_a7f32.jpg', date: '2026 · 月 · 日', line: '这里换成那天的一句话' },
+  { src: 'images/p_b9k41.jpg', date: '2026 · 月 · 日', line: '这里换成那天的一句话' },
+  { src: 'images/p_c5m88.jpg', date: '2026 · 月 · 日', line: '这里换成那天的一句话' }
+];
+const QUOTES = [
+  { text: '闹闹大王', note: '她说' },
+  { text: '老铁咪', note: '她说' },
+  { text: '好热好热', note: '她说' }
+];
+
+/* ================= 开场数字 ================= */
+function dayCount() {
+  return Math.floor((Date.now() - START.getTime()) / 86400000);
+}
+function countUp(el, to) {
+  const dur = 1700, t0 = performance.now();
+  (function step(t) {
+    const p = Math.min((t - t0) / dur, 1);
+    const eased = 1 - Math.pow(2, -10 * p);
+    el.textContent = Math.round(to * eased);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = to;
+  })(t0);
+}
+
+/* ================= 照片 ================= */
+let idx = 0, timer = null;
+function buildGallery() {
+  const stage = document.getElementById('stage');
+  const dots = document.getElementById('dots');
+  PHOTOS.forEach((p, i) => {
+    const fig = document.createElement('figure');
+    fig.className = 'slide' + (i === 0 ? ' on' : '');
+    const img = document.createElement('img');
+    img.src = p.src;
+    img.alt = '';
+    img.loading = i === 0 ? 'eager' : 'lazy';
+    img.decoding = 'async';
+    fig.appendChild(img);
+    stage.appendChild(fig);
+    const d = document.createElement('i');
+    if (i === 0) d.className = 'on';
+    dots.appendChild(d);
+  });
+  const cap = document.createElement('div');
+  cap.className = 'caption';
+  cap.innerHTML = '<span class="date"></span><span class="line"></span>';
+  stage.appendChild(cap);
+  render();
+  timer = setInterval(() => { idx = (idx + 1) % PHOTOS.length; render(); }, 6200);
+}
+function render() {
+  document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('on', i === idx));
+  document.querySelectorAll('.dots i').forEach((d, i) => d.classList.toggle('on', i === idx));
+  const cap = document.querySelector('.caption');
+  cap.querySelector('.date').textContent = PHOTOS[idx].date;
+  cap.querySelector('.line').textContent = PHOTOS[idx].line;
+}
+
+/* ================= 每日一句 ================= */
+function renderQuote() {
+  const seed = Math.floor(Date.now() / 86400000);
+  const q = QUOTES[seed % QUOTES.length];
+  document.getElementById('quoteText').textContent = q.text;
+  document.getElementById('quoteNote').textContent = q.note || '';
+}
+
+/* ================= 信 ================= */
+function decode(enc) {
+  try {
+    const raw = atob(enc);
+    let out = '';
+    for (let i = 0; i < raw.length; i++) out += String.fromCharCode(raw.charCodeAt(i) ^ 0x5a);
+    return decodeURIComponent(escape(out));
+  } catch (e) { return ''; }
+}
+function renderLetters() {
+  document.querySelectorAll('.letter').forEach(el => {
+    const target = new Date(el.dataset.date + 'T00:00:00');
+    const data = (window.LETTERS || {})[el.dataset.key] || {};
+    const diff = Math.ceil((target - Date.now()) / 86400000);
+    const isBirthday = el.dataset.key === 'b';
+    const head = isBirthday ? '等你生日那天' : '等我们满一年';
+    const dateStr = el.dataset.date.replace(/-/g, '.');
+
+    if (diff > 0) {
+      el.innerHTML =
+        '<div class="seal">封</div>' +
+        '<div class="title">' + head + '</div>' +
+        '<div class="cd">还有 <b>' + diff + '</b> 天　·　' + dateStr + '</div>';
     } else {
-      tries++;
-      sessionStorage.tries = tries;
-      err.textContent = '暗号不对哦 (' + tries + '/5)';
-      if (tries >= 5) {
-        sessionStorage.lockedUntil = Date.now() + 3600000;
-        err.textContent = '试错太多，锁 1 小时';
-      }
-    }
-  }
-  document.getElementById('code').addEventListener('keydown', e => {
-    if (e.key === 'Enter') unlock();
-  });
-  // 本次会话输对过就不再问
-  if (sessionStorage.ok === '1') document.getElementById('gate').classList.add('hidden');
-
-  // 改成你们在一起的日期即可
-  const START = new Date('2026-04-13T00:00:00');
-
-  function tick() {
-    const diff = Date.now() - START;
-    const days = Math.floor(diff / 86400000);
-    document.getElementById('days').innerHTML = days + '<small> 天</small>';
-    document.getElementById('since').textContent =
-      '自 ' + START.toLocaleDateString('zh-CN');
-  }
-  tick(); setInterval(tick, 1000);
-
-  // 点击任意位置飘爱心
-  document.addEventListener('click', e => {
-    for (let i = 0; i < 3; i++) {
-      const h = document.createElement('div');
-      h.className = 'heart';
-      h.textContent = ['💗','💖','💕'][i % 3];
-      h.style.left = (e.clientX + (Math.random()*60-30)) + 'px';
-      h.style.top  = (e.clientY - 10) + 'px';
-      document.body.appendChild(h);
-      setTimeout(() => h.remove(), 1600);
+      const paras = decode(data.body || '').split('\n').filter(Boolean)
+        .map(t => '<p>' + t + '</p>').join('');
+      el.classList.add('open');
+      el.innerHTML =
+        '<div class="title">' + (data.title || head) + '</div>' +
+        '<div class="body">' + paras + '<div class="sign">' + (data.sign || '') + '</div></div>';
     }
   });
+}
+
+/* ================= 启动 ================= */
+let started = false;
+function start() {
+  if (started) return;
+  started = true;
+  document.getElementById('page').classList.remove('hidden');
+  countUp(document.getElementById('days'), dayCount());
+  buildGallery();
+  renderQuote();
+  renderLetters();
+}
+
+if (sessionStorage.ok === '1') {
+  document.getElementById('gate').classList.add('hidden');
+  start();
+}
 </script>
 </body>
 </html>
