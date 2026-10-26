@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Days ✨</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff; min-height: 100vh; text-align: center;
+    overflow-x: hidden;
+  }
+  h1 { padding-top: 48px; font-weight: 300; letter-spacing: 6px; font-size: 28px; }
+  .sub { color: #8892b0; margin-top: 8px; font-size: 14px; }
+
+  .counter {
+    margin: 40px auto 0; font-size: 64px; font-weight: 200;
+    color: #ffd6e0; text-shadow: 0 0 30px rgba(255, 107, 157, .5);
+  }
+  .counter small { font-size: 20px; color: #8892b0; }
+  .since { color: #8892b0; font-size: 13px; margin-top: 4px; }
+
+  .photos {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px; max-width: 720px; margin: 48px auto; padding: 0 20px;
+  }
+  .photos div {
+    aspect-ratio: 3/4; border-radius: 14px; background: #233a5e;
+    display: flex; align-items: center; justify-content: center;
+    color: #5a6c93; font-size: 14px; cursor: pointer;
+    transition: transform .25s, box-shadow .25s;
+    user-select: none;
+  }
+  .photos div:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 12px 30px rgba(0,0,0,.4); }
+  .photos div:active { transform: scale(.95); }
+
+  .hint { color: #5a6c93; font-size: 13px; margin-bottom: 60px; }
+  .heart {
+    position: fixed; pointer-events: none; font-size: 24px;
+    animation: floatUp 1.6s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-180px) scale(1.6); }
+  }
+
+  /* 口令锁遮罩 */
+  #gate {
+    position: fixed; inset: 0; z-index: 99;
+    background: linear-gradient(160deg, #1a1a2e, #0f3460);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 18px;
+  }
+  #gate.hidden { display: none; }
+  #gate p { color: #8892b0; font-size: 15px; letter-spacing: 2px; }
+  #gate input {
+    background: transparent; border: none; border-bottom: 1px solid #5a6c93;
+    color: #ffd6e0; font-size: 22px; text-align: center; letter-spacing: 6px;
+    width: 200px; outline: none; padding: 6px;
+  }
+  #gate button {
+    background: transparent; color: #ffd6e0; border: 1px solid #ff6b9d;
+    border-radius: 20px; padding: 8px 34px; font-size: 15px; cursor: pointer;
+    transition: background .2s;
+  }
+  #gate button:hover { background: rgba(255,107,157,.15); }
+  #gate .err { color: #ff6b6b; font-size: 13px; height: 16px; }
+</style>
+</head>
+<body>
+  <div id="gate">
+    <p>🔒 只有知道暗号的人才能进来</p>
+    <input id="code" type="password" maxlength="12" placeholder="暗号" autofocus>
+    <button onclick="unlock()">进入</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <h1>OUR DAYS</h1>
+  <div class="sub">—— 记录小韩&小王的每一天 ——</div>
+
+  <div class="counter" id="days">…<small> 天</small></div>
+  <div class="since" id="since"></div>
+
+  <div class="photos">
+    <div><img src="images/p_a7f32.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:14px"></div>
+    <div><img src="images/p_b9k41.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:14px"></div>
+    <div><img src="images/p_c5m88.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:14px"></div>
+  </div>
+
+  <div class="hint">点一下任意照片块试试 ✨</div>
+
+<script>
+  // ===== 口令锁：把暗号改成只有你们俩知道的 =====
+  const PASSCODE = '0413';
+  // 猜错超过 5 次，1 小时内不再允许尝试（存在浏览器里）
+  let tries = +(sessionStorage.tries || 0);
+  const lockedUntil = +(sessionStorage.lockedUntil || 0);
+
+  function unlock() {
+    const gate = document.getElementById('gate');
+    const err = document.getElementById('err');
+    if (Date.now() < lockedUntil) {
+      err.textContent = '试错太多啦，休息一小时再来~';
+      return;
+    }
+    if (document.getElementById('code').value === PASSCODE) {
+      sessionStorage.ok = '1';
+      gate.classList.add('hidden');
+    } else {
+      tries++;
+      sessionStorage.tries = tries;
+      err.textContent = '暗号不对哦 (' + tries + '/5)';
+      if (tries >= 5) {
+        sessionStorage.lockedUntil = Date.now() + 3600000;
+        err.textContent = '试错太多，锁 1 小时';
+      }
+    }
+  }
+  document.getElementById('code').addEventListener('keydown', e => {
+    if (e.key === 'Enter') unlock();
+  });
+  // 本次会话输对过就不再问
+  if (sessionStorage.ok === '1') document.getElementById('gate').classList.add('hidden');
+
+  // 改成你们在一起的日期即可
+  const START = new Date('2026-04-13T00:00:00');
+
+  function tick() {
+    const diff = Date.now() - START;
+    const days = Math.floor(diff / 86400000);
+    document.getElementById('days').innerHTML = days + '<small> 天</small>';
+    document.getElementById('since').textContent =
+      '自 ' + START.toLocaleDateString('zh-CN');
+  }
+  tick(); setInterval(tick, 1000);
+
+  // 点击任意位置飘爱心
+  document.addEventListener('click', e => {
+    for (let i = 0; i < 3; i++) {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = ['💗','💖','💕'][i % 3];
+      h.style.left = (e.clientX + (Math.random()*60-30)) + 'px';
+      h.style.top  = (e.clientY - 10) + 'px';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 1600);
+    }
+  });
+</script>
+</body>
+</html>
