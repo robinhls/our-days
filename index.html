@@ -185,6 +185,7 @@
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
     .slide.on img { transform: none; }
+    .kicker, .counter em, .hero-names, .cue { opacity: 1 !important; }
   }
 </style>
 </head>
@@ -256,9 +257,9 @@ document.getElementById('code').addEventListener('keydown', e => { if (e.key ===
 /* ================= 数据 ================= */
 const START = new Date(2026, 3, 13);          // 2026-04-13
 const PHOTOS = [
-  { src: 'images/p_a7f32.jpg', date: '2026 · 月 · 日', line: '这里换成那天的一句话' },
-  { src: 'images/p_b9k41.jpg', date: '2026 · 月 · 日', line: '这里换成那天的一句话' },
-  { src: 'images/p_c5m88.jpg', date: '2026 · 月 · 日', line: '这里换成那天的一句话' }
+  { src: 'images/p_a7f32.jpg', date: '', line: '' },
+  { src: 'images/p_b9k41.jpg', date: '', line: '' },
+  { src: 'images/p_c5m88.jpg', date: '', line: '' }
 ];
 const QUOTES = [
   { text: '闹闹大王', note: '她说' },
@@ -271,14 +272,14 @@ function dayCount() {
   return Math.floor((Date.now() - START.getTime()) / 86400000);
 }
 function countUp(el, to) {
+  el.textContent = to;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const dur = 1700, t0 = performance.now();
-  (function step(t) {
+  requestAnimationFrame(function step(t) {
     const p = Math.min((t - t0) / dur, 1);
-    const eased = 1 - Math.pow(2, -10 * p);
-    el.textContent = Math.round(to * eased);
+    el.textContent = Math.round(to * (1 - Math.pow(2, -10 * p)));
     if (p < 1) requestAnimationFrame(step);
-    else el.textContent = to;
-  })(t0);
+  });
 }
 
 /* ================= 照片 ================= */
@@ -311,8 +312,12 @@ function render() {
   document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('on', i === idx));
   document.querySelectorAll('.dots i').forEach((d, i) => d.classList.toggle('on', i === idx));
   const cap = document.querySelector('.caption');
-  cap.querySelector('.date').textContent = PHOTOS[idx].date;
-  cap.querySelector('.line').textContent = PHOTOS[idx].line;
+  const dateEl = cap.querySelector('.date');
+  const lineEl = cap.querySelector('.line');
+  dateEl.textContent = PHOTOS[idx].date || '';
+  lineEl.textContent = PHOTOS[idx].line || '';
+  dateEl.style.display = PHOTOS[idx].date ? '' : 'none';
+  lineEl.style.display = PHOTOS[idx].line ? '' : 'none';
 }
 
 /* ================= 每日一句 ================= */
